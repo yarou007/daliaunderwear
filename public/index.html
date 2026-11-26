@@ -3,79 +3,69 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="مجموعة Dalia للملابس الداخلية النسائية. إختار المقاس والألوان اللي تناسبك.">
-  <meta name="theme-color" content="#f8f1ee">
+  <meta name="description" content="باكات Dalia للملابس الداخلية النسائية. إختار الباك والمقاسات والألوان اللي تناسبك.">
+  <meta name="theme-color" content="#fcf8f5">
   <title>Dalia | ملابس داخلية نسائية</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/dalia.css">
   <script type="module" src="/brand.mjs"></script>
-  <script type="module" src="/catalog-ui.mjs"></script>
-  <script type="module" src="/bag.mjs"></script>
+  <script type="module" src="/packs-ui.mjs"></script>
+  <script type="module" src="/pack-checkout.mjs"></script>
 </head>
 <body>
   <a href="#main" class="skip" data-copy="skip">انتقل للمحتوى</a>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="wordmark" href="#main" dir="ltr" aria-label="Dalia"><span aria-hidden="true">✿</span> Dalia</a>
+      <a class="wordmark" href="/" dir="ltr" aria-label="Dalia"><span aria-hidden="true">✿</span> Dalia</a>
       <nav aria-label="الموقع" data-aria="navigation">
-        <a href="#collection" data-copy="collectionNav">المجموعة</a>
-        <a href="#how" data-copy="howNav">دليل الاختيار</a>
+        <a href="#packs" data-copy="packsNav">الباكات</a>
+        <a href="#how" data-copy="howNav">طريقة الطلب</a>
       </nav>
       <div class="header-actions">
         <button class="language" id="language" type="button" lang="fr" aria-label="Version française">FR</button>
-        <button class="bag-toggle" id="open-bag" type="button" aria-haspopup="dialog">
-          <span class="bag-icon" aria-hidden="true"></span>
-          <span data-copy="bag">اختياراتي</span> <b data-bag-count>0</b>
-        </button>
+        <button class="button primary" id="quick-order" type="button" aria-haspopup="dialog" data-copy="order">إطلب توّا</button>
       </div>
     </div>
   </header>
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <img class="hero-image" src="/images/hero.webp" alt="قميص داخلي وردي على مانيكان" data-alt="heroAlt" width="1300" height="867" fetchpriority="high">
       <div class="hero-copy">
         <p class="hero-label" data-copy="heroLabel">ملابس داخلية نسائية</p>
         <h1 id="hero-title" data-copy="headline">راحة لكل يوم</h1>
-        <p class="hero-description" data-copy="intro">قصّات بسيطة وتفاصيل أنيقة. إختار المقاس والألوان اللي تناسبك.</p>
-        <a href="#collection" class="button primary" data-copy="discover">تصفّح المجموعة</a>
-      </div>
-      <div class="hero-image">
-        <img src="/images/hero.webp" alt="قميص داخلي وردي بياقة مزخرفة على مانيكان" data-alt="heroAlt" width="1200" height="800" fetchpriority="high">
+        <p class="hero-description" data-copy="intro">قمصان وسراويل داخلية في باكات. إختار المقاس والألوان على ذوقك.</p>
+        <a href="#packs" class="button primary" data-copy="discover">تصفّح الباكات</a>
+        <p class="hero-price" id="starting-price"></p>
       </div>
     </section>
     <div class="wrap reassurance">
-      <p><span class="mini-mark" aria-hidden="true">✦</span><span data-copy="trustSize">مقاس لكل قطعة</span></p>
-      <p><span class="mini-mark" aria-hidden="true">✦</span><span data-copy="trustColor">ألوان على ذوقك</span></p>
-      <p><span class="mini-mark" aria-hidden="true">✦</span><span data-copy="trustReview">ملخّص لكل الاختيارات</span></p>
+      <p data-copy="trustSize">مقاس لكل نوع</p>
+      <p data-copy="trustColor">ألوان على ذوقك</p>
+      <p data-copy="trustCall">التأكيد بالتليفون</p>
     </div>
-    <section id="collection" class="wrap collection" aria-labelledby="collection-title">
-      <div class="collection-heading">
-        <div>
-          <h2 id="collection-title" data-copy="collectionTitle">مجموعة Dalia</h2>
-          <p data-copy="collectionDescription">قمصان وسراويل داخلية بتصاميم لكل يوم.</p>
-        </div>
-        <div id="category-filters" aria-label="المجموعة" data-aria="collectionNav"></div>
+    <section id="packs" class="wrap catalog" aria-labelledby="packs-title">
+      <div class="section-heading">
+        <h2 id="packs-title" data-copy="packsTitle">إختار الباك اللي يناسبك</h2>
+        <p data-copy="packsDescription">باكات قمصان، باكات سراويل، وباكات تجمع الاثنين.</p>
       </div>
-      <div id="product-grid" class="product-grid"></div>
+      <div id="pack-grid" class="pack-grid"></div>
     </section>
-    <section id="how" class="guide" aria-labelledby="guide-title">
-      <div class="guide-photo"><img src="/images/detail.webp" alt="تفاصيل الزخرفة والعقدة على القماش الوردي" data-alt="detailAlt" width="750" height="750" loading="lazy"></div>
+    <section id="how" class="wrap guide" aria-labelledby="guide-title">
+      <img class="guide-photo" src="/images/detail.webp" alt="تفاصيل القماش الوردي" data-alt="detailAlt" width="504" height="504" loading="lazy">
       <div class="guide-copy">
-        <h2 id="guide-title" data-copy="guideTitle">دليل الاختيار</h2>
-        <dl>
-          <dt data-copy="sizeTitle">مقاس مستقل لكل قطعة</dt>
-          <dd data-copy="sizeCopy">إختار المقاس لكل قطعة. تنجم تزيد نفس الموديل بمقاسات مختلفة.</dd>
-          <dt data-copy="colorsTitle">تنسيق الألوان</dt>
-          <dd data-copy="colorsCopy">حدّد الكمية لكل لون. الألوان والمقاسات تظهر في «اختياراتي».</dd>
-          <dt data-copy="noteTitle">ملاحظة للطلب</dt>
-          <dd data-copy="noteCopy">تنجم تكتب تفضيلك للألوان، مثلاً «قطعتين بالوردي وقطعة بالرمادي».</dd>
-        </dl>
-        <a href="#collection" class="button outline" data-copy="choose">إختار قطعك</a>
+        <h2 id="guide-title" data-copy="guideTitle">كيفاش تطلب؟</h2>
+        <ol>
+          <li data-copy="guidePack">إختار الباك.</li>
+          <li data-copy="guideOptions">حدّد المقاسات والألوان، أو اكتب تفضيلاتك.</li>
+          <li data-copy="guidePhone">خلّي رقم التليفون باش نأكّدوا معاك التفاصيل.</li>
+        </ol>
+        <a href="#packs" class="button outline" data-copy="discover">تصفّح الباكات</a>
       </div>
     </section>
   </main>
   <footer class="wrap site-footer">
-    <a class="wordmark" href="#main" dir="ltr" aria-label="Dalia"><span aria-hidden="true">✿</span> Dalia</a>
-    <span data-copy="footer">معاينة المجموعة</span>
+    <a class="wordmark" href="/" dir="ltr" aria-label="Dalia"><span aria-hidden="true">✿</span> Dalia</a>
+    <p data-copy="footer">معاينة Dalia · الأسعار للتجربة</p>
   </footer>
 </body>
 </html>

@@ -1,11 +1,5 @@
 export const sizes = ["M", "L", "XL", "2XL", "3XL"];
 
-export const categories = [
-  { id: "all", name: { ar: "الكل", fr: "Tout voir" } },
-  { id: "camisoles", name: { ar: "قمصان داخلية", fr: "Caracos" } },
-  { id: "briefs", name: { ar: "سراويل داخلية", fr: "Culottes" } },
-];
-
 export const products = [
   {
     id: "lace-camisole",
