@@ -4,7 +4,6 @@ import { products, sizes } from "../../../public/dalia-catalog.mjs";
 const uuid = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
 const allowedStatuses = new Set(["pending", "confirmed", "unreachable", "cancelled"]);
 const orderFields = "id,phone,base_pack,addon_pack,total,status,created_at,updated_at,confirmed_at";
-const cookieName = "__Secure-dalia_session";
 const supabaseUrl = Deno.env.get("SUPABASE_URL");
 const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const publicKey = Deno.env.get("SUPABASE_ANON_KEY");
@@ -168,13 +167,8 @@ async function addPack(id, body) {
   conflict();
 }
 
-function sessionCookie(token, seconds) {
-  return `${cookieName}=${token}; Path=/api/dalia; Max-Age=${seconds}; Secure; HttpOnly; SameSite=Strict`;
-}
-
 function tokenFrom(request) {
-  const cookies = request.headers.get("Cookie")?.split(/;\s*/) ?? [];
-  const token = cookies.find(cookie => cookie.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
+  const token = request.headers.get("X-Dalia-Session");
   return /^[\w-]+(?:\.[\w-]+){2}$/.test(token ?? "") ? token : null;
 }
 
@@ -229,7 +223,10 @@ async function login(body) {
   if (!/^[\w-]+(?:\.[\w-]+){2}$/.test(token ?? "") || !Number.isInteger(session.expires_in)) {
     throw new ApiError(503, "UNAVAILABLE");
   }
-  return json({ ok: true }, 200, { "Set-Cookie": sessionCookie(token, Math.min(session.expires_in, 3600)) });
+  return json({ ok: true }, 200, {
+    "X-Dalia-Session": token,
+    "X-Dalia-Session-Max-Age": String(Math.min(session.expires_in, 3600)),
+  });
 }
 
 async function listOrders(query) {
@@ -273,9 +270,6 @@ export async function handleDaliaRequest(request) {
   try {
     const { method } = request;
     if (action === "login" && method === "POST") return await login(await readJson(request));
-    if (action === "logout" && method === "POST") {
-      return json({ ok: true }, 200, { "Set-Cookie": sessionCookie("", 0) });
-    }
     if (action === "orders") {
       if (method === "POST" && addon) return await addPack(id, await readJson(request));
       if (method === "POST" && !id) return await createOrder(await readJson(request));
