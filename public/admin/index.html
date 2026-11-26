@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr-TN" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#fcf8f5">
+  <title>Commandes | Dalia</title>
+  <link rel="icon" href="/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/dalia.css">
+  <link rel="stylesheet" href="/admin/admin.css">
+  <script type="module" src="/admin/admin.mjs"></script>
+</head>
+<body>
+  <a href="#main" class="skip">Passer au contenu</a>
+  <header class="admin-header">
+    <div class="wrap admin-topbar">
+      <a class="wordmark" href="/" aria-label="Dalia, boutique"><span aria-hidden="true">✿</span> Dalia</a>
+      <div class="admin-topbar-actions">
+        <a class="admin-store-link" href="/">Voir la boutique</a>
+        <button id="logout" class="button admin-quiet" type="button" hidden>Se déconnecter</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="wrap admin-main">
+    <noscript><p class="admin-feedback">Activez JavaScript pour accéder aux commandes.</p></noscript>
+    <p id="session-check" class="admin-session" role="status">Vérification de la session…</p>
+
+    <section id="login-panel" class="admin-login" aria-labelledby="login-title" hidden>
+      <div class="admin-login-photo" aria-hidden="true"></div>
+      <div class="admin-login-form">
+        <h1 id="login-title">Espace commandes</h1>
+        <p class="admin-description">Connectez-vous pour vérifier les commandes par téléphone.</p>
+        <form id="login-form" action="/api/dalia/login" method="post" novalidate>
+          <label class="admin-field" for="identifier">Identifiant
+            <input id="identifier" name="identifier" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="254" required>
+          </label>
+          <label class="admin-field" for="password">Mot de passe
+            <input id="password" name="password" type="password" autocomplete="current-password" maxlength="1024" required>
+          </label>
+          <p id="login-error" class="admin-feedback" role="alert" hidden></p>
+          <button id="sign-in" class="button primary" type="submit" disabled>Se connecter</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="orders-panel" class="admin-orders" aria-labelledby="orders-title" hidden>
+      <div class="admin-heading">
+        <div>
+          <h1 id="orders-title" tabindex="-1">Commandes</h1>
+          <p class="admin-description">Appelez les clients et mettez à jour le statut de leurs commandes.</p>
+        </div>
+        <button id="refresh" class="button admin-quiet" type="button">Actualiser</button>
+      </div>
+      <div class="admin-filters" role="group" aria-label="Filtrer par statut">
+        <button class="button admin-filter" data-filter="pending" aria-pressed="true" type="button">À appeler</button>
+        <button class="button admin-filter" data-filter="confirmed" aria-pressed="false" type="button">Confirmées</button>
+        <button class="button admin-filter" data-filter="unreachable" aria-pressed="false" type="button">Sans réponse</button>
+        <button class="button admin-filter" data-filter="cancelled" aria-pressed="false" type="button">Annulées</button>
+      </div>
+      <p id="list-error" class="admin-feedback" role="alert" hidden></p>
+      <p id="list-status" class="admin-list-status" role="status" aria-live="polite" tabindex="-1"></p>
+      <div id="orders-list" class="admin-list" aria-busy="false"></div>
+      <div id="pagination" class="admin-pagination" role="group" aria-label="Pages de commandes" hidden>
+        <button id="previous" class="button admin-quiet" type="button">Précédent</button>
+        <span id="page-number"></span>
+        <button id="next" class="button admin-quiet" type="button">Suivant</button>
+      </div>
+    </section>
+  </main>
+  <template id="order-template">
+    <article class="admin-order">
+      <div class="admin-contact">
+        <h2 class="admin-order-reference" tabindex="-1"></h2>
+        <time class="admin-created"></time>
+        <a class="button admin-call"></a>
+        <p class="admin-order-confirmed" hidden></p>
+      </div>
+      <div class="admin-order-content">
+        <ul class="admin-order-packs" aria-label="Packs"></ul>
+      </div>
+      <div class="admin-order-controls">
+        <div class="admin-order-status">
+          <span class="admin-status-tag"></span>
+          <p class="admin-total"><span>Total</span><strong></strong></p>
+        </div>
+        <div class="admin-row-actions"></div>
+        <p class="admin-row-error admin-feedback" role="alert" hidden></p>
+      </div>
+    </article>
+  </template>
+</body>
+</html>

@@ -20,7 +20,7 @@ const translations = {
     guidePack: "إختار الباك.",
     guideOptions: "حدّد المقاسات والألوان، أو اكتب تفضيلاتك.",
     guidePhone: "خلّي رقم التليفون باش نأكّدوا معاك التفاصيل.",
-    footer: "معاينة Dalia · الأسعار للتجربة",
+    footer: "الطلبات تتأكّد بالتليفون",
   },
   fr: {
     skip: "Aller au contenu",
@@ -43,7 +43,7 @@ const translations = {
     guidePack: "Choisissez votre pack.",
     guideOptions: "Sélectionnez vos tailles et couleurs ou indiquez vos préférences.",
     guidePhone: "Indiquez votre numéro pour confirmer les détails par téléphone.",
-    footer: "Aperçu Dalia · Prix à titre d’essai",
+    footer: "Commandes confirmées par téléphone",
   },
 };
 

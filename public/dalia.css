@@ -385,8 +385,7 @@ legend.pack-check-label { margin-block-end: 6px; }
   border-radius: 50%;
   background-color: var(--pack-swatch);
 }
-.pack-check-notice, .pack-check-phone-hint { color: var(--muted); font-size: .77rem; }
-.pack-check-notice { padding: 7px 10px; border-radius: 7px; background: #f6efeb; }
+.pack-check-phone-hint { color: var(--muted); font-size: .77rem; }
 .pack-check-total {
   display: flex;
   justify-content: space-between;

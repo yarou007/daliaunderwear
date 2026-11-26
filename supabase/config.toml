@@ -1,0 +1,5 @@
+project_id = "dalia"
+
+[functions.dalia-api]
+verify_jwt = false
+entrypoint = "./functions/dalia-api/index.mjs"
