@@ -8,8 +8,8 @@
   <title>Commandes | Dalia</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/dalia.css">
-  <link rel="stylesheet" href="/admin/admin.css">
-  <script type="module" src="/admin/admin.mjs"></script>
+  <link rel="stylesheet" href="./portal.css">
+  <script type="module" src="./portal.mjs"></script>
 </head>
 <body>
   <a href="#main" class="skip">Passer au contenu</a>
@@ -32,10 +32,7 @@
       <div class="admin-login-form">
         <h1 id="login-title">Espace commandes</h1>
         <p class="admin-description">Connectez-vous pour vérifier les commandes par téléphone.</p>
-        <form id="login-form" action="/api/dalia/login" method="post" novalidate>
-          <label class="admin-field" for="identifier">Identifiant
-            <input id="identifier" name="identifier" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="254" required>
-          </label>
+        <form id="login-form" action="./api/login" method="post" novalidate>
           <label class="admin-field" for="password">Mot de passe
             <input id="password" name="password" type="password" autocomplete="current-password" maxlength="1024" required>
           </label>

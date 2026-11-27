@@ -1,27 +1,30 @@
-const routePattern = /^(?:login|logout|orders(?:\/[0-9a-f-]{36}(?:\/addon)?)?)$/;
+import { portalPath } from "../lib/dalia-portal.mjs";
+
+const publicRoutes = /^orders(?:\/[0-9a-f-]{36}\/addon)?$/;
+const staffRoutes = /^(?:login|logout|orders(?:\/[0-9a-f-]{36})?)$/;
 const maxBodyBytes = 8192;
 const cookieName = "__Secure-dalia_session";
 const tokenPattern = /^[\w-]+(?:\.[\w-]+){2}$/;
 
-function sessionCookie(token, seconds) {
-  return `${cookieName}=${token}; Path=/api/dalia; Max-Age=${seconds}; Secure; HttpOnly; SameSite=Strict`;
+function sessionCookie(path, token, seconds) {
+  return `${cookieName}=${token}; Path=${path}/api; Max-Age=${seconds}; Secure; HttpOnly; SameSite=Strict`;
 }
 
 export default async function handleDaliaProxy(req, res) {
   res.setHeader("Cache-Control", "private, no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
 
-  const route = req.query.route;
-  if (typeof route !== "string" || !routePattern.test(route)) {
+  const { route, slug } = req.query;
+  const path = portalPath(slug);
+  const routes = path ? staffRoutes : publicRoutes;
+  if ((slug !== undefined && !path) || typeof route !== "string" || !routes.test(route)) {
     return res.status(404).json({ code: "NOT_FOUND" });
   }
 
   const method = req.method;
-  const expectedMethods = route === "orders"
-    ? ["GET", "POST"]
-    : route.startsWith("orders/") && !route.endsWith("/addon") ? ["PATCH"] : ["POST"];
-  if (!expectedMethods.includes(method)) {
-    res.setHeader("Allow", expectedMethods.join(", "));
+  const expectedMethod = path && route.startsWith("orders") ? (route === "orders" ? "GET" : "PATCH") : "POST";
+  if (method !== expectedMethod) {
+    res.setHeader("Allow", expectedMethod);
     return res.status(405).json({ code: "METHOD_NOT_ALLOWED" });
   }
   if (req.headers["sec-fetch-site"] === "cross-site"
@@ -29,7 +32,7 @@ export default async function handleDaliaProxy(req, res) {
     return res.status(403).json({ code: "FORBIDDEN" });
   }
   if (route === "logout") {
-    res.setHeader("Set-Cookie", sessionCookie("", 0));
+    res.setHeader("Set-Cookie", sessionCookie(path, "", 0));
     return res.status(200).json({ ok: true });
   }
 
@@ -48,10 +51,22 @@ export default async function handleDaliaProxy(req, res) {
     if (!body || Buffer.byteLength(body) > maxBodyBytes) {
       return res.status(body ? 413 : 400).json({ code: "INVALID_REQUEST" });
     }
+    if (route === "login") {
+      let password;
+      try {
+        password = JSON.parse(body)?.password;
+      } catch {
+        return res.status(400).json({ code: "INVALID_REQUEST" });
+      }
+      if (typeof password !== "string" || !password || password.length > 1024) {
+        return res.status(400).json({ code: "INVALID_REQUEST" });
+      }
+      body = JSON.stringify({ identifier: "manager", password });
+    }
     headers.set("Content-Type", "application/json");
   }
 
-  if (route !== "login" && typeof req.headers.cookie === "string") {
+  if (path && route !== "login" && typeof req.headers.cookie === "string") {
     const token = req.headers.cookie.split(/;\s*/)
       .find(cookie => cookie.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
     if (tokenPattern.test(token ?? "")) headers.set("X-Dalia-Session", token);
@@ -79,7 +94,7 @@ export default async function handleDaliaProxy(req, res) {
       if (!tokenPattern.test(token ?? "") || !Number.isInteger(seconds) || seconds < 1 || seconds > 3600) {
         throw new Error("Missing upstream session");
       }
-      res.setHeader("Set-Cookie", sessionCookie(token, seconds));
+      res.setHeader("Set-Cookie", sessionCookie(path, token, seconds));
     }
     if (upstream.status === 429) res.setHeader("Retry-After", "30");
     return res.status(upstream.status).json(response);

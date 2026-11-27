@@ -1,5 +1,5 @@
-import { products } from "../dalia-catalog.mjs";
-import { packById, packContents } from "../dalia-packs.mjs";
+import { products } from "/dalia-catalog.mjs";
+import { packById, packContents } from "/dalia-packs.mjs";
 
 const statuses = {
   pending: "À appeler",
@@ -112,7 +112,7 @@ function showLogin(message = "", focus = false) {
   loginPanel.hidden = false;
   loginForm.elements.password.value = "";
   feedback(loginError, message);
-  if (focus) loginForm.elements.identifier.focus();
+  if (focus) loginForm.elements.password.focus();
 }
 
 function showOrders(focus = false) {
@@ -296,7 +296,7 @@ async function loadOrders({ filter = status, start = offset, initial = false, no
   const query = new URLSearchParams({ status: filter, limit: pageSize, offset: start });
 
   try {
-    const result = await request("/api/dalia/orders?" + query, { signal: controller.signal });
+    const result = await request("./api/orders?" + query, { signal: controller.signal });
     if (controller !== currentLoad || session !== generation) return;
     if (!Array.isArray(result.orders)) throw new Error("Invalid orders response");
     if (start > 0 && !result.orders.length) {
@@ -339,7 +339,7 @@ async function updateStatus(order, nextStatus, controls, errorTarget) {
   setRowBusy(controls, true);
   feedback(errorTarget);
   try {
-    const result = await request("/api/dalia/orders/" + encodeURIComponent(order.id), {
+    const result = await request("./api/orders/" + encodeURIComponent(order.id), {
       method: "PATCH",
       body: { status: nextStatus, updatedAt: order.updated_at },
     });
@@ -372,27 +372,25 @@ async function updateStatus(order, nextStatus, controls, errorTarget) {
 loginForm.addEventListener("submit", async event => {
   event.preventDefault();
   if (signIn.disabled) return;
-  const identifierField = loginForm.elements.identifier;
   const passwordField = loginForm.elements.password;
-  const identifier = identifierField.value.trim();
-  if (!identifier || !passwordField.value) {
-    feedback(loginError, "Saisissez votre identifiant et votre mot de passe.");
-    (identifier ? passwordField : identifierField).focus();
+  if (!passwordField.value) {
+    feedback(loginError, "Saisissez votre mot de passe.");
+    passwordField.focus();
     return;
   }
   signIn.disabled = true;
   signIn.textContent = "Connexion…";
   feedback(loginError);
   try {
-    const result = await request("/api/dalia/login", {
+    const result = await request("./api/login", {
       method: "POST",
-      body: { identifier, password: passwordField.value },
+      body: { password: passwordField.value },
     });
     if (!result.ok) throw new Error("Invalid sign-in response");
     showOrders(true);
     await loadOrders();
   } catch (error) {
-    const message = error.status === 401 ? "Identifiant ou mot de passe incorrect."
+    const message = error.status === 401 ? "Mot de passe incorrect."
       : error.status === 403 ? "Ce compte n’a pas accès à l’espace commandes."
         : unavailable(error, "Connexion indisponible. Réessayez.");
     feedback(loginError, message);
@@ -410,7 +408,7 @@ logout.addEventListener("click", async () => {
   logout.disabled = true;
   syncControls();
   try {
-    const result = await request("/api/dalia/logout", { method: "POST", body: {} });
+    const result = await request("./api/logout", { method: "POST", body: {} });
     if (!result.ok) throw new Error("Invalid sign-out response");
     showLogin("", true);
   } catch (error) {
