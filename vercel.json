@@ -6,6 +6,9 @@
   "functions": {
     "api/dalia-portal.js": { "includeFiles": "portal/**" }
   },
+  "redirects": [
+    { "source": "/equipe/:slug/", "destination": "/equipe/:slug", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/equipe/:slug/api/:route+", "destination": "/api/dalia-proxy?slug=:slug&route=:route" },
     { "source": "/equipe/:slug/:asset", "destination": "/api/dalia-portal?slug=:slug&asset=:asset" },

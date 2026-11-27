@@ -1,6 +1,7 @@
 {
   "name": "dalia-storefront",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "esbuild src/analytics.mjs --bundle --format=esm --minify --outfile=public/dalia-analytics.js"
   },
