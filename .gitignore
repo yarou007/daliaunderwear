@@ -1,5 +1,6 @@
 /.vercel/
 /supabase/.temp/
 /node_modules/
+/public/dalia-analytics.js
 .env*
 .DS_Store

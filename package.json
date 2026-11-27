@@ -1,0 +1,13 @@
+{
+  "name": "dalia-storefront",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/analytics.mjs --bundle --format=esm --minify --outfile=public/dalia-analytics.js"
+  },
+  "dependencies": {
+    "@vercel/analytics": "2.0.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

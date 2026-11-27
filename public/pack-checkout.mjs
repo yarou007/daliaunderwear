@@ -354,6 +354,7 @@ function renderOrder(locale, labels) {
     preferences.replaceChildren(preferenceFields(draft, locale, labels));
     total.replaceWith(total = totalRow([draft], labels.total, locale, labels));
     error.hidden = true;
+    window.daliaTrack?.("Pack selected", pack.id);
   });
 
   const preferences = element("div", "pack-check-config");
@@ -419,6 +420,7 @@ function renderOrder(locale, labels) {
     offer = null;
     offerVisible = true;
     render(true);
+    window.daliaTrack?.("Order requested", basePack.packId);
   });
   return form;
 }
@@ -485,6 +487,7 @@ function renderOffers(alternatives, locale, labels) {
     offer = packSelection(pack);
     updateOffer();
     error.hidden = true;
+    window.daliaTrack?.("Pack selected", pack.id);
   }, true);
   const actions = element("div", "pack-check-actions");
   const add = control("pack-check-primary", labels.add);
@@ -539,12 +542,14 @@ function renderOffers(alternatives, locale, labels) {
     offer = null;
     offerVisible = false;
     render(true);
+    window.daliaTrack?.("Add-on accepted", addonPack.packId);
   });
   return form;
 }
 
 function open(packId) {
-  const pack = packById(packId) ?? packById("mix-8") ?? packs[0];
+  const selectedPack = packById(packId);
+  const pack = selectedPack ?? packById("mix-8") ?? packs[0];
   if (!pack || dialog.open) return;
   opener = document.activeElement;
   draft = { ...packSelection(pack), phone: "" };
@@ -556,6 +561,7 @@ function open(packId) {
   dialog.showModal();
   heading.focus();
   resetBodyScroll();
+  if (selectedPack) window.daliaTrack?.("Pack selected", selectedPack.id);
 }
 
 dialog.addEventListener("cancel", event => {
